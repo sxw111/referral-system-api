@@ -25,15 +25,6 @@ async def create(
     )
 
 
-async def delete(*, db_session: AsyncSession, user_id: int) -> None:
-    """Deletes the referral code."""
-    user = await get_user(db_session=db_session, user_id=user_id)
-
-    user.delete_referral_code()  # type: ignore
-
-    await db_session.commit()
-
-
 async def get_referred_users_by_referer_id(
     *, db_session: AsyncSession, referer_id: int
 ) -> list[User]:
@@ -43,3 +34,12 @@ async def get_referred_users_by_referer_id(
     result = await db_session.execute(query)
 
     return result.scalars().all()  # type: ignore
+
+
+async def delete(*, db_session: AsyncSession, user_id: int) -> None:
+    """Deletes the referral code."""
+    user = await get_user(db_session=db_session, user_id=user_id)
+
+    user.delete_referral_code()  # type: ignore
+
+    await db_session.commit()
