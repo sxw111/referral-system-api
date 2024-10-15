@@ -1,8 +1,8 @@
 """Initial tables
 
-Revision ID: dffb6c7b5fb2
+Revision ID: a94170676f49
 Revises:
-Create Date: 2024-10-15 13:50:15.629425
+Create Date: 2024-10-15 15:55:15.966506
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "dffb6c7b5fb2"
+revision: str = "a94170676f49"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -27,7 +27,7 @@ def upgrade() -> None:
         sa.Column("email", sa.String(), nullable=False),
         sa.Column("password", sa.String(), nullable=False),
         sa.Column("referral_code", sa.String(length=8), nullable=True),
-        sa.Column("referral_code_exp", sa.DateTime(), nullable=True),
+        sa.Column("referral_code_exp", sa.DateTime(timezone=True), nullable=True),
         sa.Column("referer_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["referer_id"], ["users.id"], name=op.f("fk_users_referer_id_users")

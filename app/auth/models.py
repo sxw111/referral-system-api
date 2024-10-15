@@ -18,11 +18,13 @@ class User(Base):
     referral_code: Mapped[str | None] = mapped_column(
         String(8), unique=True, nullable=True
     )
-    referral_code_exp: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    referral_code_exp: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     referer_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
 
     def create_referral_code(self, days: int = 30) -> None:
-        "Creates a referral code and determines its expiration date."
+        """Creates a referral code and determines its expiration date."""
         self.referral_code = generate_random_referral_code(8)
         self.referral_code_exp = datetime.now(timezone.utc) + timedelta(days=days)
 
