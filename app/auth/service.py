@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import Depends
@@ -46,10 +46,9 @@ async def get_by_referral_code(
     user = result.scalars().first()
 
     if user:
-        if user.referral_code is None:
-            return None
-
-        if user.referral_code_exp < datetime.utcnow():
+        if user.referral_code_exp is None or user.referral_code_exp < datetime.now(
+            timezone.utc
+        ):
             return None
 
     return user
@@ -62,7 +61,9 @@ async def create(
     hashed_password = get_password_hash(user_in.password)
     user_in.password = hashed_password
 
-    user = User(**user_in.model_dump(), referer_id=referer_id)
+    user = User(
+        **user_in.model_dump(exclude={"referer_referral_code"}), referer_id=referer_id
+    )
 
     db_session.add(user)
     await db_session.commit()

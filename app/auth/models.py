@@ -1,5 +1,4 @@
-from typing import TYPE_CHECKING
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from pydantic import EmailStr
 from sqlalchemy import DateTime, ForeignKey, String
@@ -7,9 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.core import Base
 from app.models import PydanticBase
-
-if TYPE_CHECKING:
-    from app.referrals.service import generate_random_referral_code
+from app.referrals.utils import generate_random_referral_code
 
 
 class User(Base):
@@ -24,12 +21,12 @@ class User(Base):
     referral_code_exp: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     referer_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
 
-    def create_referral_code(self, days: int = 30):
+    def create_referral_code(self, days: int = 30) -> None:
         "Creates a referral code and determines its expiration date."
         self.referral_code = generate_random_referral_code(8)
-        self.referral_code_exp = datetime.utcnow() + timedelta(days=days)
+        self.referral_code_exp = datetime.now(timezone.utc) + timedelta(days=days)
 
-    def delete_referral_code(self):
+    def delete_referral_code(self) -> None:
         """Deletes referral code."""
         self.referral_code = None
         self.referral_code_exp = None
@@ -45,7 +42,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(UserBase):
-    email: str | None
+    email: str | None  # type: ignore
     password: str | None
 
 

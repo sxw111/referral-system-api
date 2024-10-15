@@ -1,7 +1,9 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query, status
+from fastapi_cache import FastAPICache
+from fastapi_cache.decorator import cache
 from pydantic import EmailStr
 
 from app.auth.models import UserRead
@@ -16,6 +18,7 @@ router = APIRouter()
 
 
 @router.get("/{referer_id}/referrals", response_model=list[UserRead])
+@cache(expire=300)
 async def get_refferals(db_session: SessionDep, referer_id: int) -> Any:
     """Retrieves all referrals associated with a given referer ID."""
     return await get_referred_users_by_referer_id(
@@ -28,6 +31,7 @@ async def get_refferals(db_session: SessionDep, referer_id: int) -> Any:
     response_model=ReferralResponse,
     status_code=status.HTTP_200_OK,
 )
+@cache(expire=300)
 async def get_referral_code_by_email(
     db_session: SessionDep, email: EmailStr
 ) -> ReferralResponse:
@@ -40,7 +44,7 @@ async def get_referral_code_by_email(
             detail="Referral code not found for the given email.",
         )
 
-    is_expired = referer.referral_code_exp < datetime.utcnow()
+    is_expired = referer.referral_code_exp < datetime.now(timezone.utc)  # type: ignore
 
     return ReferralResponse(
         user_id=referer.id, referral_code=referer.referral_code, is_expired=is_expired
@@ -56,6 +60,9 @@ async def create_referral_code(
     db_session: SessionDep, current_user: CurrentUser, days: int = Query(30, ge=1)
 ) -> ReferralResponse:
     """Creates a referral code for the current user."""
+    cache_key_email = f"/api/v1/referrals/email/{current_user.email}/code"
+    await FastAPICache.clear(cache_key_email)
+
     return await create(db_session=db_session, user_id=current_user.id, days=days)
 
 

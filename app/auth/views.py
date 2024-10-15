@@ -33,7 +33,7 @@ async def signup(db_session: SessionDep, user_in: UserCreate) -> Any:
         if not referer:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Incorrect referral code.",
+                detail="Incorrect referral code.",
             )
         referer_id = referer.id
 
