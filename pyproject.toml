@@ -1,0 +1,67 @@
+[tool.poetry]
+name = "referral-system-api"
+version = "0.1.0"
+description = ""
+authors = ["sxw111 <sxw9sxw@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.2"
+uvicorn = {version = "^0.31.1", extras = ["standart"]}
+sqlalchemy = {version = "^2.0.35", extras = ["asyncio"]}
+pydantic-settings = "^2.5.2"
+python-jose = {version = "^3.3.0", extras = ["cryptography"]}
+passlib = "^1.7.4"
+bcrypt = "^4.2.0"
+alembic = "^1.13.3"
+asyncpg = "^0.29.0"
+pydantic = {version = "^2.9.2", extras = ["email"]}
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+mypy = "^1.12.0"
+black = "^24.10.0"
+isort = "^5.13.2"
+pre-commit = "^4.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+color=true
+exclude = '''
+    /(
+        \.git
+        | \.mypy_cache
+        | \.venv
+        | migrations/versions
+    )/
+'''
+include = '\.pyi?$'
+line-length = 88
+
+[tool.mypy]
+plugins = [
+  "pydantic.mypy"
+]
+
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+disallow_any_generics = true
+check_untyped_defs = true
+no_implicit_reexport = true
+
+disallow_untyped_defs = true
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[tool.isort]
+profile = "black"
+line_length = 88
