@@ -2,7 +2,7 @@
     "files.exclude": {
         "**/__init__.py": true,
         "**/__pycache__": true,
-        "**/.venv": false,
+        "**/.venv": true,
         "**/.pytest_cache": true,
         "**/.mypy_cache": true
     }

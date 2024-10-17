@@ -14,7 +14,7 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
-    password: Mapped[str] = mapped_column(unique=False, nullable=False)
+    password: Mapped[str] = mapped_column(unique=False, nullable=True)
     referral_code: Mapped[str | None] = mapped_column(
         String(8), unique=True, nullable=True
     )
@@ -22,6 +22,7 @@ class User(Base):
         DateTime(timezone=True), nullable=True
     )
     referer_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
+    google_id: Mapped[str] = mapped_column(unique=True, index=True, nullable=True)
 
     def create_referral_code(self, days: int = 30) -> None:
         """Creates a referral code and determines its expiration date."""
@@ -51,3 +52,7 @@ class UserUpdate(UserBase):
 class UserRead(UserBase):
     id: int
     email: str
+
+
+class UserCreateGoogle(UserBase):
+    google_id: str

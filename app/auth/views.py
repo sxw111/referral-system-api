@@ -42,7 +42,9 @@ async def signup(db_session: SessionDep, user_in: UserCreate) -> Any:
     return user
 
 
-@auth_router.post("/signin")
+@auth_router.post(
+    "/signin", response_model=TokenResponse, status_code=status.HTTP_200_OK
+)
 async def signin(
     db_session: SessionDep, user_credentials: OAuth2PasswordRequestForm = Depends()
 ) -> TokenResponse:

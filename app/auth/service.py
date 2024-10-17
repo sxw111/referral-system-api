@@ -14,7 +14,7 @@ from app.exceptions import CredentialsException
 from app.jwt.models import TokenData
 from app.security import get_password_hash
 
-from .models import User, UserCreate
+from .models import User, UserCreate, UserCreateGoogle
 
 
 async def get(*, db_session: AsyncSession, user_id: int) -> User | None:
@@ -64,6 +64,22 @@ async def create(
     user = User(
         **user_in.model_dump(exclude={"referer_referral_code"}), referer_id=referer_id
     )
+
+    db_session.add(user)
+    await db_session.commit()
+    await db_session.refresh(user)
+
+    return user
+
+
+async def create_user_through_google(
+    *, db_session: AsyncSession, user_in: UserCreateGoogle
+) -> User:
+    """
+    Creates a new user in the database using
+    information retrieved from Google OAuth.
+    """
+    user = User(**user_in.model_dump())
 
     db_session.add(user)
     await db_session.commit()
