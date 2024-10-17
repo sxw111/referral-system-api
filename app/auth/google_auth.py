@@ -1,6 +1,5 @@
 import httpx
 from fastapi import APIRouter, status
-from fastapi.security import OAuth2PasswordBearer
 from starlette.responses import RedirectResponse
 
 from app.config import settings
