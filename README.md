@@ -11,6 +11,7 @@ API with JWT / Google OAuth2 authentication and a referral system.
 - **Migrations**: [Alembic](https://alembic.sqlalchemy.org/)
 - **ORM**: [SQLAlchemy](https://www.sqlalchemy.org/)
 - **Validation and Serialization**: [Pydantic](https://pydantic-docs.helpmanual.io/)
+- **Testing**: [pytest](https://pytest.org/)
 - **Asynchronous Programming**: Fully asynchronous implementation
 
 ## Installation
