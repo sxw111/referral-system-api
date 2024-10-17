@@ -22,10 +22,12 @@ API with JWT / Google OAuth2 authentication and a referral system.
    cd referral-system-api
    ```
 
-2. Build and Run the Docker Containers:
+2. Edit the .env file by adding your data.
+
+3. Build and Run the Docker Containers:
 
    ```bash
    docker-compose up --build
    ```
 
-3. Open your browser and go to http://localhost:8000/docs to view the Swagger documentation and interact with the API.
+4. Open your browser and go to http://localhost:8000/docs to view the Swagger documentation and interact with the API.
