@@ -14,7 +14,7 @@ from .config import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # Startup
-    redis = aioredis.from_url("redis://redis")
+    redis = aioredis.from_url(str(settings.REDIS_URL))
     FastAPICache.init(RedisBackend(redis), prefix="fastapi-cache")
     yield
     # Shutdown

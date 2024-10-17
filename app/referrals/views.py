@@ -8,10 +8,11 @@ from pydantic import EmailStr
 from app.auth.models import UserRead
 from app.auth.service import CurrentUser
 from app.auth.service import get_by_email as get_user_by_email
+from app.auth.service import get_by_referral_code
 from app.database.core import SessionDep
 
 from .models import ReferralResponse
-from .service import create, delete, get_referred_users_by_referer_id
+from .service import create, delete, get_referred_users_by_referer_id, set_referer_id
 
 router = APIRouter()
 
@@ -69,3 +70,29 @@ async def delete_referral_code(
 ) -> None:
     """Deletes the referral code for the current user."""
     await delete(db_session=db_session, user_id=current_user.id)
+
+
+@router.post("/use-referral-code", status_code=status.HTTP_201_CREATED)
+async def use_referral_code(
+    db_session: SessionDep, current_user: CurrentUser, referral_code: str
+) -> str:
+    """
+    Uses a referral code for the current user if it has not been added already.
+    """
+    if current_user.referer_id:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="You have already entered a referral code!",
+        )
+
+    referer = await get_by_referral_code(
+        db_session=db_session, referral_code=referral_code
+    )
+    if not referer:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Referral code not found!"
+        )
+
+    return await set_referer_id(
+        db_session=db_session, user=current_user, referer_id=referer.id
+    )
