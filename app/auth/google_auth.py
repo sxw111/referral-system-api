@@ -14,9 +14,6 @@ from .service import create_user_through_google, get_by_email
 google_auth_router = APIRouter()
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
 @google_auth_router.get(
     "/login", response_class=RedirectResponse, status_code=status.HTTP_302_FOUND
 )
