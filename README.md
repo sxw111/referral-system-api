@@ -60,6 +60,7 @@ app/
 ├── models.py                           # Base class for Pydantic models with custom configuration
 ├── security.py                         # Security-related functions
 migrations/                             # Alembic migrations
+tests/
 .dockerignore                           # Excludes unnecessary files and directories from Docker image builds
 .env                                    # File for storing sensitive environment variables
 .flake8                                 # Configuration file for Flake8 code linter
