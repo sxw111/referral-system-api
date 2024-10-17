@@ -32,7 +32,6 @@ API with JWT / Google OAuth2 authentication and a referral system.
 
 4. Open your browser and go to http://localhost:8000/docs to view the Swagger documentation and interact with the API.
 
-
 ## Project Structure
 
 ```shell
@@ -74,3 +73,7 @@ docker-compose.yml                      # Configuration file for Docker Compose
 poetry.lock                             # Automatically generated file containing locked dependencies for Poetry
 pyproject.toml                          # Configuration file for Python projects, specifying project metadata and dependencies
 ```
+
+## Contributing
+
+Your contributions are appreciated! Fork the repository, open issues, and submit pull requests.
