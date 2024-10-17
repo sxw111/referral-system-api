@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     DATABASE_URL: PostgresDsn
 
+    TEST_DB_NAME: str
+
     REDIS_URL: RedisDsn
 
     SECRET_KEY: str
