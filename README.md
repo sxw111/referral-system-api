@@ -1,6 +1,6 @@
 # referral-system-api
 
-API with JWT authentication and a referral system.
+API with JWT / Google OAuth2 authentication and a referral system.
 
 ## Tech Stack
 
