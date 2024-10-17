@@ -1,4 +1,4 @@
-# referral-system-api
+# Referral System API
 
 API with JWT / Google OAuth2 authentication and a referral system.
 
