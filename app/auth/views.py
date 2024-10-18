@@ -9,6 +9,7 @@ from app.security import create_access_token, verify_password
 
 from .models import UserCreate, UserRead
 from .service import create, get_by_email, get_by_referral_code
+from .utils import verify_email_with_hunter
 
 auth_router = APIRouter()
 
@@ -23,6 +24,12 @@ async def signup(db_session: SessionDep, user_in: UserCreate) -> Any:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"User with email `{user_in.email}` already exists.",
+        )
+
+    if not await verify_email_with_hunter(email=user_in.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="The email address provided is not valid.",
         )
 
     referer_id = None

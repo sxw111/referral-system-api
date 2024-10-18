@@ -37,6 +37,8 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
 
+    HUNTER_IO_API_KEY: str
+
     IS_ALLOWED_CREDENTIALS: bool = True
     ALLOWED_ORIGINS: list[str] = [
         "http://localhost:3000",
