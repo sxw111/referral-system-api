@@ -1,6 +1,6 @@
 # Referral System API
 
-API with JWT / Google OAuth2 authentication and a referral system.
+API with JWT / Google OAuth2 authentication, a referral system, and email verification during registration through the hunter.io service.
 
 ## Tech Stack
 
