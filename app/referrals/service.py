@@ -47,11 +47,11 @@ async def delete(*, db_session: AsyncSession, user_id: int) -> None:
 
 async def set_referer_id(
     *, db_session: AsyncSession, user: User, referer_id: int
-) -> str:
+) -> dict[str, str]:
     """Sets the referer_id for a user based on the provided referer ID."""
     user.referer_id = referer_id
 
     await db_session.commit()
     await db_session.refresh(user)
 
-    return "You have successfully added the referral code!"
+    return {"msg": "You have successfully added the referral code!"}

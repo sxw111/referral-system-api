@@ -23,6 +23,18 @@ def create_access_token(data: dict[str, Any]) -> str:
     return encoded_jwt
 
 
+def create_password_reset_token(data: dict[str, Any]) -> str:
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(hours=1)
+    to_encode.update({"exp": expire, "type": "password_reset"})
+
+    encoded_jwt = jwt.encode(
+        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+    )
+
+    return encoded_jwt
+
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 

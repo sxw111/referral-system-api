@@ -1,4 +1,4 @@
-from pydantic import PostgresDsn, RedisDsn
+from pydantic import EmailStr, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -18,6 +18,8 @@ class Settings(BaseSettings):
     OPENAPI_URL: str = "/openapi.json"
     REDOC_URL: str = "/redoc"
 
+    DOMAIN: str
+
     POSTGRES_HOST: str
     POSTGRES_PORT: int = 5432
     POSTGRES_USER: str
@@ -36,6 +38,16 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLIENT_SECRET: str
     GOOGLE_REDIRECT_URI: str
+
+    SMTP_HOST: str
+    SMTP_USER: EmailStr
+    SMTP_PASSWORD: str
+    EMAILS_FROM_EMAIL: EmailStr
+    SMTP_TLS: bool
+    SMTP_SSL: bool
+    SMTP_PORT: int = 587
+
+    RESET_PASSWORD_KEY: str
 
     HUNTER_IO_API_KEY: str
 

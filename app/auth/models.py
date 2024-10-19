@@ -44,15 +44,30 @@ class UserCreate(UserBase):
     referer_referral_code: str | None
 
 
+class UserCreateGoogle(UserBase):
+    google_id: str
+
+
 class UserUpdate(UserBase):
     email: str | None  # type: ignore
     password: str | None
 
 
+class UserUpdatePassword(PydanticBase):
+    old_password: str
+    new_password: str
+    confirm_new_password: str
+
+
+class UserResetPassword(UserBase):
+    pass
+
+
+class UserConfirmPassword(PydanticBase):
+    new_password: str
+    confirm_password: str
+
+
 class UserRead(UserBase):
     id: int
     email: str
-
-
-class UserCreateGoogle(UserBase):
-    google_id: str

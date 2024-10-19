@@ -10,7 +10,7 @@ from sqlalchemy.future import select
 
 from app.config import settings
 from app.database.core import SessionDep
-from app.exceptions import CredentialsException
+from app.exceptions import CredentialsException, PasswordResetTokenException
 from app.jwt.models import TokenData
 from app.security import get_password_hash
 
@@ -88,6 +88,18 @@ async def create_user_through_google(
     return user
 
 
+async def update_password(
+    db_session: AsyncSession, user: User, new_password: str
+) -> dict[str, str]:
+    """Updates the user's password."""
+    user.password = get_password_hash(new_password)
+
+    await db_session.commit()
+    await db_session.refresh(user)
+
+    return {"msg": "The password has been successfully changed."}
+
+
 async def verify_access_token(
     token: str, credentials_exception: CredentialsException
 ) -> TokenData:
@@ -102,6 +114,7 @@ async def verify_access_token(
         token_data = TokenData(id=user_id)
     except JWTError:
         raise credentials_exception
+
     return token_data
 
 
@@ -124,3 +137,26 @@ async def get_current_user(
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
+
+
+async def verify_password_reset_token(
+    token: str,
+    password_exception: PasswordResetTokenException,
+) -> EmailStr:
+    """Verifies the password reset token and extracts the user's email address."""
+    try:
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+        )
+
+        if payload.get("type") != "password_reset":
+            raise password_exception
+
+        email = payload.get("sub")
+        if not email:
+            raise password_exception
+
+    except JWTError:
+        raise password_exception
+
+    return email

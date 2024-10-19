@@ -75,7 +75,7 @@ async def delete_referral_code(
 @router.post("/use-referral-code", status_code=status.HTTP_201_CREATED)
 async def use_referral_code(
     db_session: SessionDep, current_user: CurrentUser, referral_code: str
-) -> str:
+) -> dict[str, str]:
     """
     Uses a referral code for the current user if it has not been added already.
     """
