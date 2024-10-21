@@ -31,6 +31,9 @@ class Settings(BaseSettings):
 
     REDIS_URL: RedisDsn
 
+    CELERY_BROKER_URL: str
+    CELERY_RESULT_BACKEND: str
+
     SECRET_KEY: str
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int

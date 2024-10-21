@@ -5,7 +5,6 @@ from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 
 from app.config import settings
 from app.database.core import SessionDep
-from app.email import send_reset_email
 from app.exceptions import PasswordResetTokenException
 from app.jwt.models import TokenResponse
 from app.security import (
@@ -29,6 +28,7 @@ from .service import (
     update_password,
     verify_password_reset_token,
 )
+from .tasks import send_email
 from .utils import verify_email_with_hunter
 
 auth_router = APIRouter()
@@ -112,8 +112,7 @@ async def change_password(
         db_session=db_session, user=current_user, new_password=password_in.new_password
     )
 
-# For now, this is implemented as a simple prototype; in the future, 
-# it will be implemented using background tasks.
+
 @users_router.post("/reset-password")
 async def request_reset_password(
     db_session: SessionDep, reset_data: UserResetPassword
@@ -132,7 +131,7 @@ async def request_reset_password(
     subject = "Please reset your password"
     body = f"Click the link to reset your password: {reset_link}"
 
-    await send_reset_email(reset_data.email, subject, body)
+    send_email.delay(reset_data.email, subject, body)
 
     return {"msg": "Password reset link has been sent to your email."}
 
