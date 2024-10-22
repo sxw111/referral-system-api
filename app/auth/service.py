@@ -55,7 +55,10 @@ async def get_by_referral_code(
 
 
 async def create(
-    *, db_session: AsyncSession, user_in: UserCreate | UserCreateByLink, referer_id: int | None
+    *,
+    db_session: AsyncSession,
+    user_in: UserCreate | UserCreateByLink,
+    referer_id: int | None
 ) -> User:
     """Creates a new user."""
     hashed_password = get_password_hash(user_in.password)
