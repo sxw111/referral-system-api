@@ -10,6 +10,7 @@ API with `JWT` / `Google OAuth2` authentication, a referral system, and email ve
 - **Containerization**: [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 - **Migrations**: [Alembic](https://alembic.sqlalchemy.org/)
 - **ORM**: [SQLAlchemy](https://www.sqlalchemy.org/)
+- **Task Queue**: [Celery](https://docs.celeryq.dev/)
 - **Validation and Serialization**: [Pydantic](https://pydantic-docs.helpmanual.io/)
 - **Testing**: [pytest](https://pytest.org/)
 - **Asynchronous Programming**: Fully asynchronous implementation
