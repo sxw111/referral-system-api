@@ -16,6 +16,7 @@ from app.security import (
 from .models import (
     UserConfirmPassword,
     UserCreate,
+    UserCreateByLink,
     UserRead,
     UserResetPassword,
     UserUpdatePassword,
@@ -71,6 +72,43 @@ async def signup(db_session: SessionDep, user_in: UserCreate) -> Any:
 
 
 @auth_router.post(
+    "/signup/referral/{referral_code}",
+    response_model=UserRead,
+    status_code=status.HTTP_201_CREATED,
+)
+async def signup_by_referral_link(
+    db_session: SessionDep, user_in: UserCreateByLink, referral_code: str
+) -> Any:
+    """Register a new user using a referral link."""
+    user = await get_by_email(db_session=db_session, email=user_in.email)
+    if user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"User with email {user_in.email} already exists.",
+        )
+
+    if not await verify_email_with_hunter(email=user_in.email):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="The email address provided is not valid.",
+        )
+
+    referer = await get_by_referral_code(
+        db_session=db_session, referral_code=referral_code
+    )
+    if not referer:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Incorrect referral code.",
+        )
+    referer_id = referer.id
+
+    user = await create(db_session=db_session, user_in=user_in, referer_id=referer_id)
+
+    return user
+
+
+@auth_router.post(
     "/signin", response_model=TokenResponse, status_code=status.HTTP_200_OK
 )
 async def signin(
@@ -92,7 +130,7 @@ async def signin(
     )
 
 
-@users_router.put("/change-password", status_code=status.HTTP_200_OK)
+@auth_router.put("/password", status_code=status.HTTP_200_OK)
 async def change_password(
     db_session: SessionDep, current_user: CurrentUser, password_in: UserUpdatePassword
 ) -> Any:
@@ -113,7 +151,7 @@ async def change_password(
     )
 
 
-@users_router.post("/reset-password")
+@auth_router.post("/password/reset")
 async def request_reset_password(
     db_session: SessionDep, reset_data: UserResetPassword
 ) -> dict[str, str]:
@@ -136,7 +174,7 @@ async def request_reset_password(
     return {"msg": "Password reset link has been sent to your email."}
 
 
-@users_router.put("/reset-password/{token}")
+@auth_router.put("/password/reset/{token}")
 async def reset_password(
     db_session: SessionDep,
     token: str,

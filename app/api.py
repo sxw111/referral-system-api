@@ -2,7 +2,7 @@ from fastapi import APIRouter
 
 from app.auth.google_auth import google_auth_router
 from app.auth.views import auth_router, users_router
-from app.referrals.views import router as referrals_router
+from app.referral.views import router as referrals_router
 
 api_router = APIRouter()
 

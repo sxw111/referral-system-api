@@ -14,7 +14,7 @@ from app.exceptions import CredentialsException, PasswordResetTokenException
 from app.jwt.models import TokenData
 from app.security import get_password_hash
 
-from .models import User, UserCreate, UserCreateGoogle
+from .models import User, UserCreate, UserCreateByLink, UserCreateGoogle
 
 
 async def get(*, db_session: AsyncSession, user_id: int) -> User | None:
@@ -55,7 +55,7 @@ async def get_by_referral_code(
 
 
 async def create(
-    *, db_session: AsyncSession, user_in: UserCreate, referer_id: int | None
+    *, db_session: AsyncSession, user_in: UserCreate | UserCreateByLink, referer_id: int | None
 ) -> User:
     """Creates a new user."""
     hashed_password = get_password_hash(user_in.password)

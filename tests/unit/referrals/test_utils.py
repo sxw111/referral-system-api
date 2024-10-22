@@ -2,7 +2,7 @@ import string
 
 import pytest
 
-from app.referrals.utils import generate_random_referral_code
+from app.referral.utils import generate_random_referral_code
 
 
 @pytest.mark.unit

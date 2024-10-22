@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.database.core import Base
 from app.models import PydanticBase
-from app.referrals.utils import generate_random_referral_code
+from app.referral.utils import generate_random_referral_code
 
 
 class User(Base):
@@ -42,6 +42,10 @@ class UserBase(PydanticBase):
 class UserCreate(UserBase):
     password: str
     referer_referral_code: str | None
+
+
+class UserCreateByLink(UserBase):
+    password: str
 
 
 class UserCreateGoogle(UserBase):

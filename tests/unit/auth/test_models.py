@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 
 from app.auth.models import User
-from app.referrals.utils import generate_random_referral_code
+from app.referral.utils import generate_random_referral_code
 from freezegun import freeze_time
 
 

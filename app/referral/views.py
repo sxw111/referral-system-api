@@ -17,7 +17,7 @@ from .service import create, delete, get_referred_users_by_referer_id, set_refer
 router = APIRouter()
 
 
-@router.get("/{referer_id}/referrals", response_model=list[UserRead])
+@router.get("/{referer_id}", response_model=list[UserRead])
 @cache(expire=60)
 async def get_refferals(db_session: SessionDep, referer_id: int) -> Any:
     """Retrieves all referrals associated with a given referer ID."""
@@ -52,7 +52,7 @@ async def get_referral_code_by_email(
 
 
 @router.post(
-    "/generate-referral-code",
+    "/code",
     response_model=ReferralResponse,
     status_code=status.HTTP_201_CREATED,
 )
@@ -64,7 +64,7 @@ async def create_referral_code(
     return await create(db_session=db_session, user_id=current_user.id, days=days)
 
 
-@router.delete("/delete-referral-code", response_model=None)
+@router.delete("/code", response_model=None)
 async def delete_referral_code(
     db_session: SessionDep, current_user: CurrentUser
 ) -> None:
@@ -72,7 +72,7 @@ async def delete_referral_code(
     await delete(db_session=db_session, user_id=current_user.id)
 
 
-@router.post("/use-referral-code", status_code=status.HTTP_201_CREATED)
+@router.post("/code/apply", status_code=status.HTTP_201_CREATED)
 async def use_referral_code(
     db_session: SessionDep, current_user: CurrentUser, referral_code: str
 ) -> dict[str, str]:
