@@ -3,5 +3,6 @@ from pydantic import BaseModel
 
 # Pydantic models base class
 class PydanticBase(BaseModel):
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True,
+    }
