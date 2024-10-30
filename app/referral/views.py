@@ -11,7 +11,7 @@ from app.auth.service import get_by_email as get_user_by_email
 from app.auth.service import get_by_referral_code
 from app.database.core import SessionDep
 
-from .models import ReferralResponse
+from .models import ReferralResponse, ReferralCodeApply
 from .service import create, delete, get_referred_users_by_referer_id, set_referer_id
 
 router = APIRouter()
@@ -21,9 +21,15 @@ router = APIRouter()
 @cache(expire=60)
 async def get_refferals(db_session: SessionDep, referer_id: int) -> Any:
     """Retrieves all referrals associated with a given referer ID."""
-    return await get_referred_users_by_referer_id(
+    users = await get_referred_users_by_referer_id(
         db_session=db_session, referer_id=referer_id
     )
+    if not users:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"The user with id {referer_id} has no referrals.",
+        )
+    return users
 
 
 @router.get(
@@ -74,7 +80,7 @@ async def delete_referral_code(
 
 @router.post("/code/apply", status_code=status.HTTP_201_CREATED)
 async def use_referral_code(
-    db_session: SessionDep, current_user: CurrentUser, referral_code: str
+    db_session: SessionDep, current_user: CurrentUser, referral_code: ReferralCodeApply
 ) -> dict[str, str]:
     """
     Uses a referral code for the current user if it has not been added already.
@@ -86,7 +92,7 @@ async def use_referral_code(
         )
 
     referer = await get_by_referral_code(
-        db_session=db_session, referral_code=referral_code
+        db_session=db_session, referral_code=referral_code.referral_code
     )
     if not referer:
         raise HTTPException(

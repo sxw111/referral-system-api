@@ -16,3 +16,6 @@ class ReferralResponse(PydanticBase):
             f"{settings.DOMAIN}{settings.API_V1_STR}"
             f"/auth/signup/referral/{self.referral_code}"
         )
+
+class ReferralCodeApply(PydanticBase):
+    referral_code: str
